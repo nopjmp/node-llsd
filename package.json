@@ -1,14 +1,18 @@
 {
-  "name": "node-llsd",
-  "version": "0.0.1",
-  "description": "LLSD is a XML-like data structure mainly specific to Second Life and OpenSim.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "Kyle Thompson",
-  "license": "MIT",
-  "dependencies": {
-    "node-expat": "^2.3.4"
-  }
+	"name": "node-llsd",
+	"version": "0.0.1",
+	"description": "LLSD is a XML-like data structure mainly specific to Second Life and OpenSim.",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "http://github.com/nopjmp/node-llsd.git"
+	},
+	"author": "Kyle Thompson",
+	"license": "MIT",
+	"dependencies": {
+		"node-expat": "^2.3.4"
+	}
 }
