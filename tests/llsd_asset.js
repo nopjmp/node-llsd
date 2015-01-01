@@ -2,8 +2,7 @@ var tape = require('tape')
 
 var llsd = require('../index.js')
 
-var asset =
-  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
+var asset = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
 <llsd>\
 <array>\
 <map>\
@@ -31,8 +30,7 @@ touch_start(integer total_number)\
 </array>\
 </llsd>"
 
-var script =
-  "default\
+var script = "default\
 {\
 	state_entry()\
 {\
@@ -48,7 +46,7 @@ touch_start(integer total_number)\
 var binary =
   "AABAAAAAAAAAAAIAAAA//wAAP/8AAADgAAAA5wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABkAAAAZAAAAAAAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAABQAAAAEAAAAQAAAAAAAAAAUAAAAFAAAAABAAAAAAAAAAPgAAAAQAAAAFAGNbXgAAAABgSGVsbG8sIEF2YXRhciEAZgAAAABcXgAAAAhwEQjRABeVAAAABQBjW14AAAAAYFRvdWNoZWQuAGYAAAAAXF4AAAAIcBEI0QAXAZUAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 
-tape('asset test', function(t) {
+tape('asset', function(t) {
   t.plan(7)
 
   llsd.parse(asset,

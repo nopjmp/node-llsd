@@ -5,7 +5,7 @@ module.exports = function(prev){
     self.data.push(text)
   }
   this.end = function() {
-    prev.newData(self)
+    prev.newData(self.data)
     return prev
   }
 }
