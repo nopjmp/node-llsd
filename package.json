@@ -1,6 +1,6 @@
 {
 	"name": "node-llsd",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"description": "LLSD is a XML-like data structure specific to Second Life and OpenSim.",
 	"main": "index.js",
 	"scripts": {
