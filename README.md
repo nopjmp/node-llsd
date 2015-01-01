@@ -7,7 +7,7 @@ LLSD parser in node using node-expat
 
 ###Example Usage###
 ```
-llsd = require('node-llsd');
+var llsd = require('node-llsd');
 
 llsd.parse('<llsd><undef /></llsd>', function(json) {
   console.log(json);
