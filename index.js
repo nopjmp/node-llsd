@@ -71,6 +71,7 @@ exports.Parser = function(callback, error) {
 
   xml_parser = new expat.Parser('UTF-8')
   xml_parser.on('startElement', function(name, attrs) {
+    console.log(name)
     if (self.state.in_data) {
       throw new Error("array tag inside data tag")
       xml_parser.stop()
@@ -107,15 +108,16 @@ exports.Parser = function(callback, error) {
       xml_parser.stop()
 
       //return the data after the llsd tag (array or map)
-      callback(self.subparser.data.data)
+      callback(self.subparser.data)
     }
     self.subparser = self.subparser.end()
-      //always reset this to false in endElement to reset the check
+
+    //always reset this to false in endElement to reset the check
     self.state.in_data = false
   })
 
   xml_parser.on('text', function(text) {
-    if (self.state.in_data == true) {
+    if (self.state.in_data) {
       self.subparser.newData(text)
     } else {
       throw new Error("got data in non-data section")
