@@ -71,7 +71,6 @@ exports.Parser = function(callback, error) {
 
   xml_parser = new expat.Parser('UTF-8')
   xml_parser.on('startElement', function(name, attrs) {
-    console.log(name)
     if (self.state.in_data) {
       throw new Error("array tag inside data tag")
       xml_parser.stop()
