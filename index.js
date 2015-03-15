@@ -1,14 +1,21 @@
 var expat = require('node-expat')
 
-var llsdp = require('./types/llsd.js')
-var array = require('./types/array.js')
-var map = require('./types/map.js')
-var convert = require('./types/convert.js')
+var llsdp = require('./types/llsd')
+var array = require('./types/array')
+var map = require('./types/map')
+var convert = require('./types/convert')
 
-var helpers = require('./lib/helpers.js')
+var helpers = require('./lib/helpers')
 
-//undef is an array to give is some value, might want to make it null.
+//contacts for the parser
+var MAX_DEPTH = 32 //prevent infinate recursion
+
+//TODO: currently undef is an alias for array, it would be preferred to make it some kind of 'null' type.
 var generateSubParser = function(name, attrs, subparser, state) {
+  state.depth = state.depth + 1
+  if (state.depth > MAX_DEPTH) {
+    throw new Error("max depth of " + MAX_DEPTH + " was reached.")
+  }
   switch (name) {
     case 'llsd':
       return new llsdp()
@@ -63,6 +70,7 @@ var generateSubParser = function(name, attrs, subparser, state) {
 exports.Parser = function(callback, error) {
   var self = this
   this.state = {
+    depth: 1, //calculation is skipped on llsd
     working: false,
     in_data: false,
     tag_stack: []
