@@ -5,7 +5,7 @@ let test_data = `<?xml version="1.0" encoding="UTF-8"?>
 <llsd>
 	<map>
 	  <key>region_id</key>
-	    <uuid>67153d5b-3659-afb4-8510-adda2c034649</uuid>
+	    <uuid>33d37f28-26a7-4e3e-a97d-36289cc8ec33</uuid>
 	  <key>scale</key>
 	    <string>one minute</string>
 	  <key>simulator statistics</key>
@@ -21,7 +21,7 @@ test('example', function (t) {
     llsd.parseXML(test_data)
         .then(r => {
             t.same(r, {
-                region_id: '67153d5b-3659-afb4-8510-adda2c034649',
+                region_id: '33d37f28-26a7-4e3e-a97d-36289cc8ec33',
                 scale: 'one minute',
                 'simulator statistics': {
                     'time dilation': 0.9878624,

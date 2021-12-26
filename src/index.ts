@@ -1,6 +1,6 @@
 import { Parser } from "htmlparser2";
 import { Handler } from "htmlparser2/lib/Parser";
-import { convertBase64, noop, stringToBoolean, stringToDate, stringToInteger } from "./helpers";
+import { checkUUID, convertBase64, noop, parseLLSDReal, stringToBoolean, stringToDate, stringToInteger } from "./helpers";
 import { LLSDArrayParser, LLSDMapKeyParser, LLSDMapParser, LLSDTypeConvertParser, LLSDTypeParser, TypeParser } from "./type_parser";
 
 //contacts for the parser
@@ -155,7 +155,7 @@ export class LLSDParser implements Partial<Handler> {
         break
       case 'real':
         this.state.in_data = true
-        return new LLSDTypeConvertParser(0.0, this.subparser, parseFloat)
+        return new LLSDTypeConvertParser(0.0, this.subparser, parseLLSDReal)
         break
       case 'boolean':
         this.state.in_data = true
@@ -164,8 +164,7 @@ export class LLSDParser implements Partial<Handler> {
       case 'uuid':
         //TODO: use node-uuid to check validity
         this.state.in_data = true
-        return new LLSDTypeConvertParser("00000000-0000-0000-0000-000000000000", this.subparser,
-          noop)
+        return new LLSDTypeConvertParser("00000000-0000-0000-0000-000000000000", this.subparser, checkUUID)
         break
       case 'date':
         this.state.in_data = true
