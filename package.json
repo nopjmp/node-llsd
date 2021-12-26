@@ -4,7 +4,7 @@
 	"description": "LLSD is a XML-like data structure specific to Second Life and OpenSim.",
 	"main": "index.js",
 	"scripts": {
-		"test": "node node_modules/.bin/taper tests/*.js"
+		"test": "tape 'tests/*.js'"
 	},
 	"repository": {
 		"type": "git",
@@ -16,7 +16,6 @@
 		"node-expat": "^2.3.4"
 	},
 	"devDependencies": {
-		"tape": "^3.0.3",
-		"taper": "^0.3.0"
+		"tape": "^5.3.2"
 	}
 }
