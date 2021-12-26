@@ -1,8 +1,7 @@
-var tape = require('tape')
+import test from "tape";
+import * as llsd from "../src"
 
-var llsd = require('../index.js')
-
-var asset = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
+let asset = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
 <llsd>\
 <array>\
 <map>\
@@ -30,7 +29,7 @@ touch_start(integer total_number)\
 </array>\
 </llsd>"
 
-var script = "default\
+let script = "default\
 {\
 	state_entry()\
 {\
@@ -43,13 +42,13 @@ touch_start(integer total_number)\
 }\
 }"
 
-var binary =
+let binary =
   "AABAAAAAAAAAAAIAAAA//wAAP/8AAADgAAAA5wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABkAAAAZAAAAAAAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAABQAAAAEAAAAQAAAAAAAAAAUAAAAFAAAAABAAAAAAAAAAPgAAAAQAAAAFAGNbXgAAAABgSGVsbG8sIEF2YXRhciEAZgAAAABcXgAAAAhwEQjRABeVAAAABQBjW14AAAAAYFRvdWNoZWQuAGYAAAAAXF4AAAAIcBEI0QAXAZUAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 
-tape('asset', function(t) {
+test('asset', function(t) {
   t.plan(7)
 
-  llsd.parse(asset,
+  llsd.parseXML(asset,
     function(data) {
       t.equal(data[0]['creation-date'].toISOString(),
         "2007-03-15T18:30:18.000Z",
@@ -62,7 +61,7 @@ tape('asset', function(t) {
       t.equal(data[4], script)
       t.equal(data[5], binary)
     },
-    function(e) {
+    function(e: any) {
       t.fail(e)
       t.end()
     }
