@@ -1,8 +1,7 @@
-var tape = require('tape')
+import test from "tape";
+import * as llsd from "../src"
 
-var llsd = require('../index')
-
-var test_data = "<llsd>\
+let test_data = "<llsd>\
 <map>\
 <key>One</key>\
 <integer>1</integer>\
@@ -13,15 +12,15 @@ var test_data = "<llsd>\
 </map>\
 </llsd>";
 
-tape('map', function(t) {
+test('map', function(t) {
   t.plan(1)
-  llsd.parse(test_data, function(r) {
+  llsd.parseXML(test_data, function(r) {
     t.same(r, {
       One: 1,
       Two: 2,
       Three: 3
     })
-  }, function(e) {
+  }, function(e: any) {
     t.fail(e)
   })
 })
