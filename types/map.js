@@ -1,5 +1,5 @@
 module.exports = function(prev){
-  var self = this
+  let self = this
   this.previous = prev
   this.data = {}
   this._key = null

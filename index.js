@@ -1,17 +1,17 @@
-var expat = require('node-expat')
+const htmlparser2 = require("htmlparser2");
 
-var llsdp = require('./types/llsd')
-var array = require('./types/array')
-var map = require('./types/map')
-var convert = require('./types/convert')
+const llsdp = require('./types/llsd')
+const array = require('./types/array')
+const map = require('./types/map')
+const convert = require('./types/convert')
 
-var helpers = require('./lib/helpers')
+const helpers = require('./lib/helpers')
 
 //contacts for the parser
-var MAX_DEPTH = 32 //prevent infinate recursion
+const MAX_DEPTH = 32 //prevent infinate recursion
 
 //TODO: currently undef is an alias for array, it would be preferred to make it some kind of 'null' type.
-var generateSubParser = function(name, attrs, subparser, state) {
+const generateSubParser = function(name, attrs, subparser, state) {
   state.depth = state.depth + 1
   if (state.depth > MAX_DEPTH) {
     throw new Error("max depth of " + MAX_DEPTH + " was reached.")
@@ -67,8 +67,9 @@ var generateSubParser = function(name, attrs, subparser, state) {
   }
 }
 
-exports.Parser = function(callback, error) {
-  var self = this
+
+exports.Parser = function(callback, errorCallback) {
+  let self = this
   this.state = {
     depth: 1, //calculation is skipped on llsd
     working: false,
@@ -76,67 +77,64 @@ exports.Parser = function(callback, error) {
     tag_stack: []
   }
   this.subparser = null // current subparser
-
-  xml_parser = new expat.Parser('UTF-8')
-  xml_parser.on('startElement', function(name, attrs) {
-    if (self.state.in_data) {
-      throw new Error("array tag inside data tag")
-      xml_parser.stop()
-    }
-    self.state.tag_stack.push(name)
-    if (name === 'llsd') {
-      if (self.state.working) {
-        throw new Error("cannot parse another llsd")
-        xml_parser.stop()
-      } else {
-        self.state.working = true
+  this.parsed_data = null
+  xml_parser = new htmlparser2.Parser({
+    onopentag(name, attrs) {
+      if (self.state.in_data) {
+        throw new Error("array tag inside data tag")
       }
-    }
-    //generates a recursive call tree to translate llsd to json
-    try {
-      self.subparser = generateSubParser(name, attrs, self.subparser,
-        self.state)
-    } catch (e) {
-      error(e)
-      xml_parser.stop()
-    }
-  })
+      self.state.tag_stack.push(name)
+      if (name === 'llsd') {
+        if (self.state.working) {
+          throw new Error("cannot parse another llsd")
+        } else {
+          self.state.working = true
+        }
+      }
+      //generates a recursive call tree to translate llsd to json
+      try {
+        self.subparser = generateSubParser(name, attrs, self.subparser,
+          self.state)
+      } catch (e) {
+        error(e)
 
-  xml_parser.on('endElement', function(name) {
-    var last_name = self.state.tag_stack.pop()
+      }
+    },
+    ontext(text) {
+      if (self.state.in_data) {
+        self.subparser.newData(text)
+      } else {
+        throw new Error("got data in non-data section")
+      }
+    },
+    onclosetag(name) {
+      let last_name = self.state.tag_stack.pop()
 
-    if (last_name !== name) {
-      throw new Error("unmatched tag: " + name + "!=" + last_name)
-      xml_parser.stop()
-    }
+      if (last_name !== name) {
+        throw new Error("unmatched tag: " + name + "!=" + last_name)
+      }
 
-    if (name === "llsd") {
-      self.state.working = false
-      xml_parser.stop()
+      if (name === "llsd") {
+        self.state.working = false
 
-      //return the data after the llsd tag (array or map)
-      callback(self.subparser.data)
-    }
-    self.subparser = self.subparser.end()
+        // return the data after the llsd tag (array or map)
+        self.parsed_data = self.subparser.data
+      }
+      self.subparser = self.subparser.end()
 
-    //always reset this to false in endElement to reset the check
-    self.state.in_data = false
-  })
-
-  xml_parser.on('text', function(text) {
-    if (self.state.in_data) {
-      self.subparser.newData(text)
-    } else {
-      throw new Error("got data in non-data section")
-      xml_parser.stop()
-    }
-  })
-
-  xml_parser.on('error', error)
-
-  xml_parser.on('end', function() {
-    if (self.state.working) {
-      error("end before finding </llsd>")
+      //always reset this to false in endElement to reset the check
+      self.state.in_data = false
+    },
+    onerror(error) {
+      errorCallback(error)
+    },
+    onend() {
+      if (self.state.working) {
+        error("end before finding </llsd>")
+      } else if (self.parsed_data) {
+        callback(self.parsed_data)
+        self.parsed_data = null;
+      }
     }
   })
 

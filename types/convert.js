@@ -1,5 +1,5 @@
 module.exports = function(init, prev, convert) {
-  var self = this;
+  let self = this;
   this.data = init;
   this.newData = function (text) {
     self.data = convert(text)

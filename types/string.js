@@ -1,5 +1,5 @@
 module.exports = function(prev) {
-  var self = this;
+  let self = this;
   this.data = "";
   this.newData = function (text) {
     self.data = text
