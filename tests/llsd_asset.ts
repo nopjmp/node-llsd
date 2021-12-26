@@ -45,11 +45,11 @@ touch_start(integer total_number)\
 let binary =
   "AABAAAAAAAAAAAIAAAA//wAAP/8AAADgAAAA5wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABkAAAAZAAAAAAAAAAAAAAAZAAAAAAAAAABAAAAAAAAAAAAAAAAAAAABQAAAAEAAAAQAAAAAAAAAAUAAAAFAAAAABAAAAAAAAAAPgAAAAQAAAAFAGNbXgAAAABgSGVsbG8sIEF2YXRhciEAZgAAAABcXgAAAAhwEQjRABeVAAAABQBjW14AAAAAYFRvdWNoZWQuAGYAAAAAXF4AAAAIcBEI0QAXAZUAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
 
-test('asset', function(t) {
+test('asset', function (t) {
   t.plan(7)
 
-  llsd.parseXML(asset,
-    function(data) {
+  llsd.parseXML(asset)
+    .then((data) => {
       t.equal(data[0]['creation-date'].toISOString(),
         "2007-03-15T18:30:18.000Z",
         "creation-date")
@@ -60,10 +60,9 @@ test('asset', function(t) {
       t.equal(data[3], "Over here.")
       t.equal(data[4], script)
       t.equal(data[5], binary)
-    },
-    function(e: any) {
+    })
+    .catch(e => {
       t.fail(e)
       t.end()
-    }
-  )
+    })
 })

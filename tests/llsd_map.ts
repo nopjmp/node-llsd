@@ -12,15 +12,17 @@ let test_data = "<llsd>\
 </map>\
 </llsd>";
 
-test('map', function(t) {
+test('map', function (t) {
   t.plan(1)
-  llsd.parseXML(test_data, function(r) {
-    t.same(r, {
-      One: 1,
-      Two: 2,
-      Three: 3
+  llsd.parseXML(test_data)
+    .then(r => {
+      t.same(r, {
+        One: 1,
+        Two: 2,
+        Three: 3
+      })
     })
-  }, function(e: any) {
-    t.fail(e)
-  })
+    .catch(e => {
+      t.fail(e)
+    })
 })

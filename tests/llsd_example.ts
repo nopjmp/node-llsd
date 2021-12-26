@@ -16,18 +16,20 @@ let test_data = `<?xml version="1.0" encoding="UTF-8"?>
 	</map>
 </llsd>`
 
-test('example', function(t) {
+test('example', function (t) {
     t.plan(1)
-    llsd.parseXML(test_data, function(r) {
-      t.same(r, {
-        region_id: '67153d5b-3659-afb4-8510-adda2c034649',
-        scale: 'one minute',
-        'simulator statistics': {
-            'time dilation': 0.9878624,
-            'sim fps': 44.38898
-        }
-      })
-    }, function(e: any) {
-      t.fail(e)
-    })
-  })
+    llsd.parseXML(test_data)
+        .then(r => {
+            t.same(r, {
+                region_id: '67153d5b-3659-afb4-8510-adda2c034649',
+                scale: 'one minute',
+                'simulator statistics': {
+                    'time dilation': 0.9878624,
+                    'sim fps': 44.38898
+                }
+            })
+        })
+        .catch(e => {
+            t.fail(e)
+        })
+})

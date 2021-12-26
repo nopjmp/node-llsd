@@ -9,11 +9,13 @@ let test_data = "<llsd>\
 </array>\
 </llsd>";
 
-test('array', function(t) {
+test('array', function (t) {
   t.plan(1)
-  llsd.parseXML(test_data, function(r) {
-    t.same(r, [1, 2, 3])
-  }, function(e: any) {
-    t.fail(e)
-  })
+  llsd.parseXML(test_data)
+    .then(r => {
+      t.same(r, [1, 2, 3])
+    })
+    .catch(e => {
+      t.fail(e)
+    })
 })

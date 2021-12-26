@@ -5,6 +5,7 @@ import { LLSDArrayParser, LLSDMapKeyParser, LLSDMapParser, LLSDTypeConvertParser
 
 //contacts for the parser
 const MAX_DEPTH = 32 //prevent infinate recursion
+const ELEMENT_DEPTH_COUNT = ['array', 'map']
 
 interface ParserState {
   depth: number; //calculation is skipped on llsd
@@ -36,7 +37,7 @@ export class LLSDParser implements Partial<Handler> {
       in_data: false,
       tag_stack: []
     }
-    this.subparser = new LLSDTypeParser() // current subparser
+    this.subparser = undefined // current subparser
     this.parsed_data = null
 
     this.xml_parser = new Parser(this, { xmlMode: true, lowerCaseTags: true, lowerCaseAttributeNames: true })
@@ -108,15 +109,22 @@ export class LLSDParser implements Partial<Handler> {
     }
   }
 
-  generateSubParser(name: string, attrs: any): TypeParser | null | undefined {
-    if (!this.subparser) {
-      return undefined;
+  generateSubParser(name: string, attrs: any): TypeParser {
+    if (name === 'llsd' && !this.subparser) {
+      return new LLSDTypeParser();
     }
 
-    this.state.depth = this.state.depth + 1
-    if (this.state.depth > MAX_DEPTH) {
-      throw new Error("max depth of " + MAX_DEPTH + " was reached.")
+    if (!this.subparser) {
+      throw new Error('something');
     }
+
+    if (ELEMENT_DEPTH_COUNT.includes(name)) {
+      this.state.depth = this.state.depth + 1
+      if (this.state.depth > MAX_DEPTH) {
+        throw new Error("max depth of " + MAX_DEPTH + " was reached.")
+      }
+    }
+
     switch (name) {
       case 'llsd':
         return new LLSDTypeParser()
@@ -177,7 +185,9 @@ export class LLSDParser implements Partial<Handler> {
   }
 }
 
-export function parseXML(data: string, callback: ParserCallback, error: ParserErrorCallback) {
-  var p = new LLSDParser(callback, error);
-  p.end(data);
+export function parseXML(data: string): Promise<ParsedData> {
+  return new Promise((resolve, reject) => {
+    let parser = new LLSDParser(resolve, reject)
+    parser.end(data)
+  })
 }
