@@ -1,8 +1,7 @@
 {
 	"name": "node-llsd",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "LLSD is a XML-like data structure specific to Second Life and OpenSim.",
-	"main": "index.js",
 	"scripts": {
 		"test": "ts-node ./node_modules/.bin/tape 'tests/**/*.ts'"
 	},
@@ -11,8 +10,13 @@
 		"url": "http://github.com/nopjmp/node-llsd.git"
 	},
 	"directories": {
-		"lib": "./lib"
+		"lib": "lib/"
 	},
+	"main": "lib/index.js",
+    "types": "lib/index.d.ts",
+    "files": [
+        "lib/**/*"
+    ],
 	"author": "nopjmp",
 	"license": "MIT",
 	"dependencies": {
